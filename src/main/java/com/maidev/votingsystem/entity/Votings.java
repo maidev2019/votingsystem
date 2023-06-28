@@ -1,17 +1,16 @@
 package com.maidev.votingsystem.entity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name="votings")
-@Getter
-@Setter
 public class Votings {
+
+    public Votings(){}
+    
+    public Votings(Long voterId, Long challengeId, boolean isVoted) {
+        this.voterId = voterId;
+        this.challengeId = challengeId;
+        this.isVoted = isVoted;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,14 +10,16 @@ import com.maidev.votingsystem.entity.Challenge;
 import com.maidev.votingsystem.repository.ChallengeRepository;
 import com.maidev.votingsystem.service.ChallengeService;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 @Service
 @Transactional
 public class ChallengeServiceImpl implements ChallengeService{ 
     @Autowired  
-    private final ChallengeRepository challengeRepository;
+    private ChallengeRepository challengeRepository;
+
+    // public ChallengeServiceImpl(ChallengeRepository challengeRepository) {
+    //     super();
+    //     this.challengeRepository = challengeRepository;
+    // }
 
     @Override
     public List<Challenge> getAllChallenges() {

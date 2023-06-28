@@ -2,18 +2,21 @@ package com.maidev.votingsystem.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name="challenge")
-@Getter
-@Setter
+
 public class Challenge {
+
+    public Challenge(){}
+
+    public Challenge(String title, String description, boolean isCompleted, int rating) {
+        this.title = title;
+        this.description = description;
+        this.isCompleted = isCompleted;
+        this.rating = rating;
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -31,6 +34,42 @@ public class Challenge {
 
     @Column
     private int rating;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     // @ManyToOne
     // @Column
