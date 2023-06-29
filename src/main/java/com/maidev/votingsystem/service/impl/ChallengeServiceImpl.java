@@ -25,4 +25,24 @@ public class ChallengeServiceImpl implements ChallengeService{
     public List<Challenge> getAllChallenges() {
         return challengeRepository.findAll();
     }
+
+    @Override
+    public Challenge saveChallenge(Challenge challenge) {
+        return challengeRepository.save(challenge);
+    }
+
+    @Override
+    public Challenge getChallengeById(Long id) {
+       return challengeRepository.findById(id).get();
+    }
+
+    @Override
+    public Challenge updateChallenge(Challenge challenge) {
+        return challengeRepository.save(challenge);
+    }
+
+    @Override
+    public void deleteChallengeById(Long id) {
+        challengeRepository.deleteById(id);
+    }
 }
