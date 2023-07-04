@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/com/.DS_Store
+src/main/java/com/maidev/votingsystem/.DS_Store
+src/main/java/com/maidev/votingsystem/controller/.DS_Store
+src/main/java/com/maidev/votingsystem/security/.DS_Store
