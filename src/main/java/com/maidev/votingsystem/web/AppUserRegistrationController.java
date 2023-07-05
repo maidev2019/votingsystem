@@ -33,6 +33,5 @@ public class AppUserRegistrationController{
     public String registerUserAccount(@ModelAttribute("user") AppUserRegistrationDTO registratotionDTO){
         userService.saveUser(registratotionDTO);
         return "redirect:/registration?success";
-
     }
 }

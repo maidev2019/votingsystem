@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.maidev.votingsystem.entity.Challenge;
 
+
 public interface ChallengeService { 
     
     public List<Challenge> getAllChallenges();
@@ -15,4 +16,6 @@ public interface ChallengeService {
     Challenge updateChallenge(Challenge challenge);
 
     void deleteChallengeById(Long id);
+
+    void voteChallenge(Long id,  String username);
 }

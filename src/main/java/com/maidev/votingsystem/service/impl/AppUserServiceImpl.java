@@ -28,8 +28,7 @@ public class AppUserServiceImpl implements AppUserService{
     public AppUser saveUser(AppUserRegistrationDTO registratotionDTO) {
          AppUser user = new AppUser(registratotionDTO.getFirstName(),
             registratotionDTO.getLastName(),
-            registratotionDTO.getEmail(), 
-            //new BCryptPasswordEncoder().encode(registratotionDTO.getPassword()), 
+            registratotionDTO.getEmail(),             
             "{noop}"+registratotionDTO.getPassword(), 
             Arrays.asList(new AppRole("ROLE_USER")));    
         return userRepository.save(user);
@@ -41,8 +40,7 @@ public class AppUserServiceImpl implements AppUserService{
         AppUser user = userRepository.findByEmail(username);
         if(user == null){
             throw new  UsernameNotFoundException("Invalid username or password");
-        }
-        System.out.println("========|||=========== "+user.toString());
+        }       
        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));  
     }
     

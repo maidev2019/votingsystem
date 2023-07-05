@@ -1,5 +1,6 @@
 package com.maidev.votingsystem.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import com.maidev.votingsystem.entity.Challenge;
 import com.maidev.votingsystem.service.ChallengeService;
-
-
 
 
 @Controller
@@ -23,17 +21,28 @@ public class ChallengeController {
 
     // handler method to handle list of challenges and return model and view        
     @GetMapping("/challenges")
-    public String listChallenges(Model model){
-        List<Challenge> allChallenges = challengeService.getAllChallenges();        
+    public String listChallenges(Model model,Principal principal){
+        
+        List<Challenge> allChallenges = challengeService.getAllChallenges();                
+        
+        allChallenges.stream()
+        .forEach(challenge -> challenge.getListOfVoters().stream()
+        .filter(voter -> voter.getUsername().equals(principal.getName()))
+        .findFirst()
+        .ifPresent(voter -> challenge.setChecked(true)));
+
         model.addAttribute("challenges", allChallenges);        
+        model.addAttribute("loggedUser", principal.getName()); 
         return "challenges";
     }
+
     @GetMapping("/challenges/new")
     public String createChallenge(Model model){
         Challenge challenge = new Challenge();
         model.addAttribute("challenge", challenge);
         return "create_challenge";
     }
+    
     @PostMapping("/challenges")
     public String saveChallenge(@ModelAttribute("challenge") Challenge challenge){
         challengeService.saveChallenge(challenge);
@@ -46,24 +55,23 @@ public class ChallengeController {
         model.addAttribute("challenge", challenge);
         return "update_challenge";
     }
-    
-    @PostMapping("/challenges/vote/{id}")
-    public String voteChallenge(){
-        System.out.println("we are in vote challenge method");
-        return "";
-    }
+
     @PostMapping("/challenges/{id}")
     public String updateChallenge2(@PathVariable Long id, @ModelAttribute("challenge") Challenge challenge, Model model){
         // get challenge from db by id
+        Challenge existsChallenge = getExistsChallenge(id, challenge);
+        challengeService.updateChallenge(existsChallenge);
+        return "redirect:/challenges";
+    }
+
+    private Challenge getExistsChallenge(Long id, Challenge challenge) {
         Challenge existsChallenge = challengeService.getChallengeById(id);
         existsChallenge.setId(id);
         existsChallenge.setTitle(challenge.getTitle());
         existsChallenge.setDescription(challenge.getDescription());
         existsChallenge.setRating(challenge.getRating());
         existsChallenge.setCompleted(challenge.isCompleted());
-        challengeService.updateChallenge(existsChallenge);
-
-        return "redirect:/challenges";
+        return existsChallenge;
     }
     
     // challenge delete handler 
@@ -72,4 +80,13 @@ public class ChallengeController {
         challengeService.deleteChallengeById(id);
         return "redirect:/challenges";
     }
+
+    // Vote and Unvote the challenge.
+    @GetMapping("/challenges/vote/{id}")
+    public String UnVoteChallenge(@PathVariable Long id, Model model,Principal principal){   
+        challengeService.voteChallenge(id,principal.getName());
+        return "redirect:/challenges";
+    }
+
+
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <meta charset="UTF-8" />
@@ -36,8 +36,9 @@
     <div class="container">
         <br>
         <div class="row">
-            <h1>Wellcome to Challenge Voting System</h1>
+            <h1>Wellcome to Challenge Voting System </h1>
         </div>
+        <div sec:authorize="isAuthenticated()">Authenticated as <span th:text="${loggedUser}">Test</span></div>
     </div>
 </body>
 

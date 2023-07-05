@@ -11,8 +11,8 @@ public class Voter {
 
     public Voter() {}
 
-    public Voter(String voterName) {
-        this.voterName = voterName;
+    public Voter(String username) {
+        this.username = username;
     }
 
     @Id
@@ -21,6 +21,6 @@ public class Voter {
     private Long id;
 
     @Column    
-    private String voterName;
+    private String username; // email adress of logged user.
 
 }

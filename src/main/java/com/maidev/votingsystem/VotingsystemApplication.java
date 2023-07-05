@@ -1,12 +1,8 @@
 package com.maidev.votingsystem;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
-import com.maidev.votingsystem.repository.ChallengeRepository;
 
 @SpringBootApplication
 public class VotingsystemApplication implements CommandLineRunner {
@@ -15,8 +11,8 @@ public class VotingsystemApplication implements CommandLineRunner {
 		SpringApplication.run(VotingsystemApplication.class, args);
 	}
 
-	@Autowired
-	private ChallengeRepository repository;
+	// @Autowired
+	// private ChallengeRepository repository;
 	
 	@Override
 	public void run(String... args) throws Exception {

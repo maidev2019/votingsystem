@@ -1,6 +1,10 @@
 package com.maidev.votingsystem.web;
 
+import java.security.Principal;
+
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -10,9 +14,9 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/")
-    public String home(){        
+    @GetMapping(value = "/")   
+    public String home(Principal principal, Model model) {
+        model.addAttribute("loggedUser", principal.getName());                
         return "index";
-        //return "redirect:challenges";
     }
 }

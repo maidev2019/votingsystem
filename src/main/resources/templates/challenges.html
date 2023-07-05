@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <meta charset="UTF-8" />
@@ -65,9 +66,17 @@
                     <td th:text="${chal.description}" style="font-size: 18px"></td>
                     <td th:text="${chal.rating}" style="font-size: 18px"></td>
                     <td th:text="${chal.isCompleted}" style="font-size: 18px"></td>
-                    <td></td>
-                    <td><a th:href="@{/challenges/edit/{id}(id=${chal.id})}" class="btn btn-primary">Update</a>
-                    <a th:href="@{/challenges/{id}(id=${chal.id})}" class="btn btn-danger">Delete</a></td>
+                    <td>
+                        <form th:action="@{/challenges/vote/{id}(id=${chal.id})}" method="get">
+                            <input type="checkbox" id="myCheckbox" name="myCheckbox" th:checked="${chal.isChecked}" th:onclick="submit()" />
+                            <span for="myCheckbox" th:if="${chal.isChecked}"> Voted</span>
+                            <span for="myCheckbox" th:unless="${chal.isChecked}"> Vote</span>
+                        </form>
+                    </td>
+                    <td>
+                        <a th:href="@{/challenges/edit/{id}(id=${chal.id})}" class="btn btn-primary">Update</a>
+                        <a th:href="@{/challenges/{id}(id=${chal.id})}" class="btn btn-danger">Delete</a>
+                    </td>
                 </tr>
             </tbody>
 
