@@ -24,7 +24,4 @@ public class AppRole {
     public AppRole(String name) {
         this.name = name;
     }
-
-    
-
 }

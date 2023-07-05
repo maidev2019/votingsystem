@@ -47,6 +47,11 @@ public class ChallengeController {
         return "update_challenge";
     }
     
+    @PostMapping("/challenges/vote/{id}")
+    public String voteChallenge(){
+        System.out.println("we are in vote challenge method");
+        return "";
+    }
     @PostMapping("/challenges/{id}")
     public String updateChallenge2(@PathVariable Long id, @ModelAttribute("challenge") Challenge challenge, Model model){
         // get challenge from db by id

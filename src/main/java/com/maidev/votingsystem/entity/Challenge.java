@@ -1,10 +1,14 @@
 package com.maidev.votingsystem.entity;
 
-
+import java.util.List;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name="challenge")
-
 public class Challenge {
 
     public Challenge(){}
@@ -22,61 +26,25 @@ public class Challenge {
     @Column
     private Long id;
 
-    @Column    
+    @Column(length = 255)
     private String title;
 
-    @Column    
+    @Column(length = 2048)
     private String description;
 
     @Column
-
     private boolean isCompleted;
 
     @Column
     private int rating;
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    // @ManyToOne
-    // @Column
-    // private List<Voter> listOfVoters;
-    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+    name="challengs_votes", 
+    joinColumns = @JoinColumn(name="challenge_id", referencedColumnName = "id"), 
+    inverseJoinColumns = @JoinColumn(name="votes_id", referencedColumnName = "id")
+    )
+    @Column
+    private List<Voter> listOfVoters;
 
 }

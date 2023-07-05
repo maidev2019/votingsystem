@@ -16,13 +16,12 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Autowired  
     private ChallengeRepository challengeRepository;
 
-    // public ChallengeServiceImpl(ChallengeRepository challengeRepository) {
-    //     super();
-    //     this.challengeRepository = challengeRepository;
-    // }
-
     @Override
     public List<Challenge> getAllChallenges() {
+        List<Challenge> findAll = challengeRepository.findAll();
+        for (Challenge challenge : findAll) {
+            System.out.println(challenge.getTitle() + " - "+ challenge.getListOfVoters());
+        }
         return challengeRepository.findAll();
     }
 
