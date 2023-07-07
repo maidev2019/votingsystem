@@ -17,5 +17,7 @@ public interface ChallengeService {
 
     void deleteChallengeById(Long id);
 
-    void voteChallenge(Long id,  String username);
+    void voteChallenge(Long id, String username);
+
+    public void completeChallengeActions(Long id, boolean isCompleted);
 }

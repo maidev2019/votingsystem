@@ -37,7 +37,11 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     public Challenge getChallengeById(Long id) {
-       return challengeRepository.findById(id).get();
+       return findChallengeById(id);
+    }
+
+    private Challenge findChallengeById(Long id) {
+        return challengeRepository.findById(id).get();
     }
 
     @Override
@@ -53,8 +57,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     public void voteChallenge(Long id, String username) {        
         
-        Challenge findById = challengeRepository
-        .findById(id).get();
+        Challenge findById = findChallengeById(id);
         Voter findVoterByUserName = findById.getListOfVoters()
         .stream()
         .filter(voter -> voter.getUsername().equals(username))
@@ -71,5 +74,12 @@ public class ChallengeServiceImpl implements ChallengeService{
             findById.addVoter(voter);
             challengeRepository.save(findById);
         }
+    }
+   @Override
+    public void completeChallengeActions(Long id, boolean isCompleted) {
+        Challenge foundChallenge = findChallengeById(id);
+        if(foundChallenge == null) return;
+        foundChallenge.setCompleted(isCompleted);
+        challengeRepository.save(foundChallenge);
     }
 }

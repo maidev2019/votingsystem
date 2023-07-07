@@ -2,6 +2,8 @@ package com.maidev.votingsystem.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,15 +25,42 @@ public class ChallengeController {
     @GetMapping("/challenges")
     public String listChallenges(Model model,Principal principal){
         
-        List<Challenge> allChallenges = challengeService.getAllChallenges();                
+        // List<Challenge> allChallenges = challengeService.getAllChallenges();                
         
-        allChallenges.stream()
-        .forEach(challenge -> challenge.getListOfVoters().stream()
-        .filter(voter -> voter.getUsername().equals(principal.getName()))
-        .findFirst()
-        .ifPresent(voter -> challenge.setChecked(true)));
+        // List<Challenge> notCompletedChallenges = allChallenges;
+        // List<Challenge> completedChallenges = allChallenges;
+        
+        // notCompletedChallenges.stream()
+        // .filter(challenge -> !challenge.isCompleted())
+        // .forEach(challenge -> challenge.getListOfVoters().stream()        
+        // .filter(voter -> voter.getUsername().equals(principal.getName()))
+        // .findFirst()
+        // .ifPresent(voter -> challenge.setChecked(true)));
 
-        model.addAttribute("challenges", allChallenges);        
+        // completedChallenges.stream()
+        // .filter(challenge -> challenge.isCompleted())
+        // .forEach(challenge -> challenge.getListOfVoters().stream()        
+        // .filter(voter -> voter.getUsername().equals(principal.getName()))
+        // .findFirst()
+        // .ifPresent(voter -> challenge.setChecked(true)));
+
+        List<Challenge> allChallenges = challengeService.getAllChallenges();
+
+        Map<Boolean, List<Challenge>> challengesByCompletion = allChallenges.stream()
+        .collect(Collectors.partitioningBy(Challenge::isCompleted));
+
+        challengesByCompletion.get(false).stream()
+        .filter(challenge -> challenge.getListOfVoters().stream()
+        .anyMatch(voter -> voter.getUsername().equals(principal.getName())))
+        .forEach(challenge -> challenge.setChecked(true));
+
+        challengesByCompletion.get(true).stream()
+        .filter(challenge -> challenge.getListOfVoters().stream()
+        .anyMatch(voter -> voter.getUsername().equals(principal.getName())))
+        .forEach(challenge -> challenge.setChecked(true));
+
+        model.addAttribute("notcompletedchallenges", challengesByCompletion.get(false));        
+        model.addAttribute("completedchallenges", challengesByCompletion.get(true));        
         model.addAttribute("loggedUser", principal.getName()); 
         return "challenges";
     }
@@ -87,6 +116,21 @@ public class ChallengeController {
         challengeService.voteChallenge(id,principal.getName());
         return "redirect:/challenges";
     }
+
+    // complete the challenge.
+    @GetMapping("/challenges/complete/{id}")
+    public String completeChallenge(@PathVariable Long id){   
+        challengeService.completeChallengeActions(id,true);
+        return "redirect:/challenges";
+    }
+
+    // complete the challenge.
+    @GetMapping("/challenges/uncomplete/{id}")
+    public String uncompleteChallenge(@PathVariable Long id){   
+        challengeService.completeChallengeActions(id,false);
+        return "redirect:/challenges";
+    }
+    
 
 
 }
