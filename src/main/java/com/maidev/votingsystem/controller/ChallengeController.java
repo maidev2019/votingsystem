@@ -24,25 +24,6 @@ public class ChallengeController {
     // handler method to handle list of challenges and return model and view        
     @GetMapping("/challenges")
     public String listChallenges(Model model,Principal principal){
-        
-        // List<Challenge> allChallenges = challengeService.getAllChallenges();                
-        
-        // List<Challenge> notCompletedChallenges = allChallenges;
-        // List<Challenge> completedChallenges = allChallenges;
-        
-        // notCompletedChallenges.stream()
-        // .filter(challenge -> !challenge.isCompleted())
-        // .forEach(challenge -> challenge.getListOfVoters().stream()        
-        // .filter(voter -> voter.getUsername().equals(principal.getName()))
-        // .findFirst()
-        // .ifPresent(voter -> challenge.setChecked(true)));
-
-        // completedChallenges.stream()
-        // .filter(challenge -> challenge.isCompleted())
-        // .forEach(challenge -> challenge.getListOfVoters().stream()        
-        // .filter(voter -> voter.getUsername().equals(principal.getName()))
-        // .findFirst()
-        // .ifPresent(voter -> challenge.setChecked(true)));
 
         List<Challenge> allChallenges = challengeService.getAllChallenges();
 
@@ -130,7 +111,4 @@ public class ChallengeController {
         challengeService.completeChallengeActions(id,false);
         return "redirect:/challenges";
     }
-    
-
-
 }
