@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.maidev.votingsystem.entity.Challenge;
 import com.maidev.votingsystem.service.ChallengeService;
 
@@ -81,32 +83,32 @@ public class ChallengeController {
         return challengesByCompletion;
     }
 
-    @GetMapping("/challenges/new")
+    @GetMapping("/maintainChallenges/new")
     public String createChallenge(Model model){
         Challenge challenge = new Challenge();
         model.addAttribute("challenge", challenge);
         return "create_challenge";
     }
     
-    @PostMapping("/challenges")
+    @PostMapping("/maintainChallenges")
     public String saveChallenge(@ModelAttribute("challenge") Challenge challenge){
         challengeService.saveChallenge(challenge);
-        return "redirect:/challenges";
+        return "redirect:/maintainChallenges";
     }
 
-    @GetMapping("/challenges/edit/{id}")
+    @GetMapping("/maintainChallenges/edit/{id}")
     public String updateChallengeForm(@PathVariable Long id, Model model){
         Challenge challenge = challengeService.getChallengeById(id);
         model.addAttribute("challenge", challenge);
         return "update_challenge";
     }
 
-    @PostMapping("/challenges/{id}")
+    @PostMapping("/maintainChallenges/{id}")
     public String updateChallenge2(@PathVariable Long id, @ModelAttribute("challenge") Challenge challenge, Model model){
         // get challenge from db by id
         Challenge existsChallenge = getExistsChallenge(id, challenge);
         challengeService.updateChallenge(existsChallenge);
-        return "redirect:/challenges";
+        return "redirect:/maintainChallenges";
     }
 
     private Challenge getExistsChallenge(Long id, Challenge challenge) {
@@ -120,10 +122,10 @@ public class ChallengeController {
     }
     
     // challenge delete handler 
-    @GetMapping("/challenges/{id}")
+    @GetMapping("/maintainChallenges/{id}")
     public String deleteChallenge(@PathVariable Long id){
         challengeService.deleteChallengeById(id);
-        return "redirect:/challenges";
+        return "redirect:/maintainChallenges";
     }
 
     // Vote and Unvote the challenge.
@@ -133,11 +135,12 @@ public class ChallengeController {
         return "redirect:/challenges";
     }
 
-    // complete the challenge.
-    @GetMapping("/challenges/complete/{id}")
-    public String completeChallenge(@PathVariable Long id){   
-        challengeService.completeChallengeActions(id,true);
-        return "redirect:/challenges";
+    @PostMapping("/maintainChallenges/complete/{id}")
+    public String completeChallenge(@PathVariable("id") Long id, @RequestParam("isCompleted") boolean isCompleted) {
+        // Logic to update the completion status of the challenge with the given id
+        // You can use a service class or repository to update the database    
+        challengeService.completeChallengeActions(id, !isCompleted);
+        return "redirect:/maintainChallenges";
     }
 
     // uncomplete the challenge.
