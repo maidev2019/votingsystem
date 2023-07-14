@@ -21,10 +21,49 @@ public class ChallengeController {
     @Autowired  
     private  ChallengeService challengeService;
 
+     // handler method to handle list of challenges and return model and view        
+    @GetMapping("/maintainChallenges")
+    public String maintainChallenges(Model model,Principal principal){
+
+        List<Challenge> allChallenges = challengeService.getAllChallenges();
+        allChallenges.stream()
+        .filter(challenge -> challenge.getListOfVoters().stream()
+        .anyMatch(voter -> voter.getUsername().equals(principal.getName())))
+        .forEach(challenge -> challenge.setChecked(true));
+
+
+
+        model.addAttribute("challenges", allChallenges);                
+        model.addAttribute("loggedUser", principal.getName()); 
+        return "maintainChallenges";
+    }
+
+     // handler method to handle list of challenges and return model and view        
+    @GetMapping("/completedChallenges")
+    public String listCompletedChallenges(Model model,Principal principal){
+
+        Map<Boolean, List<Challenge>> challengesByCompletion = getChallengesByCompletion(principal);
+
+        model.addAttribute("completedChallenges", challengesByCompletion.get(true));        
+        model.addAttribute("loggedUser", principal.getName()); 
+        return "completedChallenges";
+    }
+
+
     // handler method to handle list of challenges and return model and view        
     @GetMapping("/challenges")
-    public String listChallenges(Model model,Principal principal){
+    public String openChallenges(Model model,Principal principal){
 
+        Map<Boolean, List<Challenge>> challengesByCompletion = getChallengesByCompletion(principal);
+
+        model.addAttribute("notcompletedchallenges", challengesByCompletion.get(false));        
+        //model.addAttribute("completedchallenges", challengesByCompletion.get(true));        
+        model.addAttribute("loggedUser", principal.getName()); 
+        return "challenges";
+    }
+
+
+    private Map<Boolean, List<Challenge>> getChallengesByCompletion(Principal principal) {
         List<Challenge> allChallenges = challengeService.getAllChallenges();
 
         Map<Boolean, List<Challenge>> challengesByCompletion = allChallenges.stream()
@@ -39,11 +78,7 @@ public class ChallengeController {
         .filter(challenge -> challenge.getListOfVoters().stream()
         .anyMatch(voter -> voter.getUsername().equals(principal.getName())))
         .forEach(challenge -> challenge.setChecked(true));
-
-        model.addAttribute("notcompletedchallenges", challengesByCompletion.get(false));        
-        model.addAttribute("completedchallenges", challengesByCompletion.get(true));        
-        model.addAttribute("loggedUser", principal.getName()); 
-        return "challenges";
+        return challengesByCompletion;
     }
 
     @GetMapping("/challenges/new")
@@ -105,10 +140,10 @@ public class ChallengeController {
         return "redirect:/challenges";
     }
 
-    // complete the challenge.
-    @GetMapping("/challenges/uncomplete/{id}")
+    // uncomplete the challenge.
+    @GetMapping("/completedChallenges/uncomplete/{id}")
     public String uncompleteChallenge(@PathVariable Long id){   
         challengeService.completeChallengeActions(id,false);
-        return "redirect:/challenges";
+        return "redirect:/completedChallenges";
     }
 }
